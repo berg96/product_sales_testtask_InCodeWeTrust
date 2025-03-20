@@ -8,5 +8,5 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
-from . import api_views
+from . import api_views, cli_commands
 from .models import Category, Product, Sale
