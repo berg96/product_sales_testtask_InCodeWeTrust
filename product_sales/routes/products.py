@@ -4,6 +4,7 @@ from product_sales import db
 from product_sales.error_handlers import InvalidAPIUsage
 from product_sales.models import Product
 
+
 products_bp = Blueprint('products', __name__, url_prefix='/api/products')
 
 
