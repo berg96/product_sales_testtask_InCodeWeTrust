@@ -36,6 +36,11 @@ class Product(db.Model):
             category=self.category.to_dict()
         )
 
+    def from_dict(self, data):
+        for field in ['name', 'category_id']:
+            if field in data:
+                setattr(self, field, data[field])
+
 
 class Sale(db.Model):
     id = db.Column(db.Integer, primary_key=True)
