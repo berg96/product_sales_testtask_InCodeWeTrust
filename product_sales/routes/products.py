@@ -31,3 +31,32 @@ def add_product():
     db.session.add(product)
     db.session.commit()
     return jsonify({'product': product.to_dict()}), 201
+
+@products_bp.route('/<int:id>', methods=['PUT'])
+def update_product(id):
+    data = request.get_json()
+    if (
+            'name' in data and
+            Product.query.filter_by(name=data['name']).first() is not None
+    ):
+        # При неуникальном значении поля name возвращаем сообщение об ошибке
+        raise InvalidAPIUsage(
+            f'Продукт с таким названием {data["name"]} уже есть в базе данных'
+        )
+    product = Product.query.get(id)
+    if product is None:
+        raise InvalidAPIUsage('Продукт с указанным id не найден', 404)
+    # Если поле для изменения не указано, оставляем исходное значение
+    product.name = data.get('name', product.name)
+    product.category_id = data.get('category_id', product.category_id)
+    db.session.commit()
+    return jsonify({'product': product.to_dict()}), 200
+
+@products_bp.route('/<int:id>', methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get(id)
+    if product is None:
+        raise InvalidAPIUsage('Продукт с указанным id не найден', 404)
+    db.session.delete(product)
+    db.session.commit()
+    return '', 204
