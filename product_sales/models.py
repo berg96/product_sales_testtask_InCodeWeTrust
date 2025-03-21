@@ -11,6 +11,12 @@ class Category(db.Model):
         'Product', backref='category', lazy='select', cascade='all, delete'
     )
 
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name
+        )
+
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +28,13 @@ class Product(db.Model):
     sales = db.relationship(
         'Sale', backref='product', lazy='dynamic', cascade='all, delete'
     )
+
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            category=self.category.to_dict()
+        )
 
 
 class Sale(db.Model):

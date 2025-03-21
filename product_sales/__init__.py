@@ -3,10 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 from settings import Config
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
+app.url_map.strict_slashes = False
 db = SQLAlchemy(app)
 
-from . import api_views, cli_commands
+from . import cli_commands
 from .models import Category, Product, Sale
+from .routes import products_bp
+
+
+app.register_blueprint(products_bp)
