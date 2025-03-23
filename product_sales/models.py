@@ -51,3 +51,4 @@ class Sale(db.Model):
     date = db.Column(
         db.Date, default=datetime.utcnow().date(), nullable=False, index=True
     )
+    discount = db.Column(db.Float, default=0.0)
