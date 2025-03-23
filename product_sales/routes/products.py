@@ -1,9 +1,7 @@
-from flask import jsonify, Blueprint, request
-
+from flask import Blueprint, jsonify, request
 from product_sales import db
 from product_sales.error_handlers import InvalidAPIUsage
 from product_sales.models import Product
-
 
 products_bp = Blueprint('products', __name__, url_prefix='/api/products')
 
@@ -14,11 +12,12 @@ def get_products():
         {'products': [product.to_dict() for product in Product.query.all()]}
     ), 200
 
+
 @products_bp.route('', methods=['POST'])
 def add_product():
     data = request.get_json()
     # Если есть недостающие ключи - выбрасываем собственное исключение
-    if missing_keys:={'name', 'category_id'} - data.keys():
+    if missing_keys := {'name', 'category_id'} - data.keys():
         raise InvalidAPIUsage(
             'В запросе отсутствуют обязательные поля: '
             f'{", ".join(missing_keys)}'
@@ -32,6 +31,7 @@ def add_product():
     db.session.add(product)
     db.session.commit()
     return jsonify({'product': product.to_dict()}), 201
+
 
 @products_bp.route('/<int:id>', methods=['PUT'])
 def update_product(id):
@@ -52,6 +52,7 @@ def update_product(id):
     product.category_id = data.get('category_id', product.category_id)
     db.session.commit()
     return jsonify({'product': product.to_dict()}), 200
+
 
 @products_bp.route('/<int:id>', methods=['DELETE'])
 def delete_product(id):

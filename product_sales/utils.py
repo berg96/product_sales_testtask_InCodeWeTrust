@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from product_sales.error_handlers import InvalidAPIUsage
 
 

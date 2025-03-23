@@ -1,11 +1,10 @@
-from flask import Blueprint, request, jsonify
-from sqlalchemy import func
-
+from flask import Blueprint, jsonify, request
 from product_sales import db
 from product_sales.cache import get_from_cache, set_to_cache
-from product_sales.models import Sale, Product
 from product_sales.error_handlers import InvalidAPIUsage
+from product_sales.models import Product, Sale
 from product_sales.utils import validate_date
+from sqlalchemy import func
 
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/sales')
 
@@ -35,6 +34,7 @@ def get_total_sales():
     set_to_cache(cache_key, total_sales)
     return jsonify({'cached': False, 'total': total_sales})
 
+
 @sales_bp.route('/top-products', methods=['GET'])
 def get_top_products():
     start_date = request.args.get('start_date')
@@ -61,9 +61,9 @@ def get_top_products():
         {
             'product': product.to_dict(),
             'total_sales': total
-        # Извлекаем из БД Продукт и Сумму продаж,
-        # сгруппированную по Продукту, отфильтрованную по параметрам
-        # и отсортированную по убыванию
+            # Извлекаем из БД Продукт и Сумму продаж,
+            # сгруппированную по Продукту, отфильтрованную по параметрам
+            # и отсортированную по убыванию
         } for product, total in db.session.query(
             Product, func.sum(Sale.quantity).label('total')
         )

@@ -1,6 +1,6 @@
 import csv
 import random
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 import click
 
